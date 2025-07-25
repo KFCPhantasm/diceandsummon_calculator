@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice & Summon Calculators</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;                         /* removed padding so header sits flush */
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #243B55, #141E30);
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      color: #fff;
+      min-height: 100vh;
+      flex-direction: column;             /* stack header + sections vertically */
+    }
+
+    h1.main-title {
+      width: 100%;
+      margin: 0 0 1rem;                  /* no top margin, only bottom spacing */
+      padding: 1rem 0;                   /* give it some vertical breathing room */
+      text-align: center;
+      color: #FFDD57;
+      text-shadow: 0 0 8px rgba(255,81,47,0.8);
+      font-size: 2rem;
+      background: rgba(36,59,85,0.85);   /* semi‑opaque bar behind title */
+    }
+
+    .sections {
+      padding: 2rem;                     /* moved the padding here */
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .container {
+      display: flex;
+      gap: 2rem;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .calculator, .info {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      text-align: center;
+    }
+
+    .calculator {
+      flex: 0 0 300px;
+    }
+    .info {
+      flex: 1 1 auto;
+      overflow-x: auto;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 1.5rem;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      box-shadow: 0 0 8px rgba(255,81,47,0.8);
+      transition: box-shadow 0.3s;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      box-shadow: 0 0 12px rgba(255,81,47,1);
+    }
+
+    button {
+      background: linear-gradient(135deg, #FF512F, #DD2476);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s;
+      color: #fff;
+    }
+    button:hover { transform: scale(1.05); }
+
+    .result {
+      margin-top: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .dice-rolls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .dice-rolls span { margin: 0.2rem; font-size: 1.5rem; }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+    }
+    .info-table th, .info-table td {
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.5rem;
+      white-space: nowrap;
+    }
+    .info-table th {
+      background: rgba(255,255,255,0.1);
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .info-table tbody tr:nth-child(odd) {
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body>
+  <h1 class="main-title">Dice and Summon Calculators by KFCPhantasm</h1>
+  <div class="sections">
+
+    <!-- Dice Calculator Section -->
+    <div class="container">
+      <div class="calculator">
+        <h2>Cait Sith' Dice</h2>
+        <input type="number" id="level" placeholder="Enter Cait Sith Level (1–99)" min="1" max="99">
+        <button id="calculate">Calculate Damage</button>
+        <div class="result" id="result" style="display:none;">
+          <div id="outcome"></div>
+          <div class="dice-rolls" id="dice-rolls"></div>
+        </div>
+      </div>
+      <div class="info">
+        <h2>Dice Damage Table by Level</h2>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Level Range</th><th>Dice Count</th><th>Min</th><th>Max</th><th>Avg</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1–29</td><td>2</td><td>300</td><td>2400</td><td>816.67</td></tr>
+            <tr><td>30–39</td><td>3</td><td>600</td><td>5400</td><td>1545.83</td></tr>
+            <tr><td>40–49</td><td>4</td><td>1000</td><td>9600</td><td>2553.70</td></tr>
+            <tr><td>50–59</td><td>5</td><td>1500</td><td>9999</td><td>3743.31</td></tr>
+            <tr><td>60–99</td><td>6</td><td>2100</td><td>9999</td><td>5025.76</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Summon Calculator Section -->
+    <div class="container">
+      <div class="calculator">
+        <h2>Cait Sith Summon</h2>
+        <input type="number" id="summon-level" placeholder="Enter Cait Sith Level (1–99)" min="1" max="99">
+        <button id="summon-btn">Summon</button>
+        <div class="result" id="summon-result" style="display:none;">
+          <div id="summon-outcome"></div>
+        </div>
+      </div>
+      <div class="info">
+        <h2>Summon Probability by Level</h2>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Level Range</th>
+              <th>Choco/Mog</th><th>Shiva</th><th>Ifrit</th><th>Ramuh</th>
+              <th>Titan</th><th>Odin</th><th>Leviathan</th><th>Bahamut</th>
+              <th>Kujata</th><th>Alexander</th><th>Phoenix</th><th>Neo Bahamut</th>
+              <th>Hades</th><th>Typhon</th><th>Bahamut Zero</th><th>Knights of Round</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1–20</td><td>1.26%</td><td>2.04%</td><td>3.85%</td><td>6.30%</td><td>8.95%</td><td>11.32%</td><td>12.93%</td><td>13.30%</td><td>12.25%</td><td>10.20%</td><td>7.63%</td><td>5.02%</td><td>2.85%</td><td>1.40%</td><td>0.55%</td><td>0.15%</td></tr>
+            <tr><td>21–41</td><td>0.70%</td><td>1.40%</td><td>2.85%</td><td>5.02%</td><td>7.63%</td><td>10.20%</td><td>12.25%</td><td>13.30%</td><td>12.93%</td><td>11.32%</td><td>8.95%</td><td>6.30%</td><td>3.85%</td><td>2.04%</td><td>0.91%</td><td>0.35%</td></tr>
+            <tr><td>42–62</td><td>0.35%</td><td>0.91%</td><td>2.04%</td><td>3.85%</td><td>6.30%</td><td>8.95%</td><td>11.32%</td><td>12.93%</td><td>13.30%</td><td>12.25%</td><td>10.20%</td><td>7.63%</td><td>5.02%</td><td>2.85%</td><td>1.40%</td><td>0.70%</td></tr>
+            <tr><td>63–83</td><td>0.15%</td><td>0.55%</td><td>1.40%</td><td>2.85%</td><td>5.02%</td><td>7.63%</td><td>10.20%</td><td>12.25%</td><td>13.30%</td><td>12.93%</td><td>11.32%</td><td>8.95%</td><td>6.30%</td><td>3.85%</td><td>2.04%</td><td>1.26%</td></tr>
+            <tr><td>84–99</td><td>0.05%</td><td>0.30%</td><td>0.91%</td><td>2.04%</td><td>3.85%</td><td>6.30%</td><td>8.95%</td><td>11.32%</td><td>12.93%</td><td>13.30%</td><td>12.25%</td><td>10.20%</td><td>7.63%</td><td>5.02%</td><td>2.85%</td><td>2.10%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Dice Calculator Logic
+    function getDiceCount(level) {
+      if (level <= 29) return 2;
+      if (level <= 39) return 3;
+      if (level <= 49) return 4;
+      if (level <= 59) return 5;
+      return 6;
+    }
+    function calculateDamage(rolls) {
+      const sum = rolls.reduce((a, b) => a + b, 0);
+      const counts = rolls.reduce((m, r) => (m[r] = (m[r]||0)+1, m), {});
+      const mult = Math.max(...Object.values(counts));
+      return Math.min(sum * mult * 100, 9999);
+    }
+    function renderRolls(rolls) {
+      const div = document.getElementById('dice-rolls');
+      div.innerHTML = '';
+      rolls.forEach(r => {
+        const span = document.createElement('span');
+        span.textContent = '🎲' + r;
+        div.appendChild(span);
+      });
+    }
+    document.getElementById('calculate').addEventListener('click', () => {
+      const lvl = parseInt(document.getElementById('level').value, 10);
+      if (isNaN(lvl) || lvl < 1 || lvl > 99) {
+        alert('Enter a valid level between 1 and 99');
+        return;
+      }
+      const rolls = Array.from({ length: getDiceCount(lvl) }, () => Math.floor(Math.random() * 6) + 1);
+      const dmg = calculateDamage(rolls);
+      const sum = rolls.reduce((a, b) => a + b, 0);
+      const counts = rolls.reduce((m, r) => (m[r] = (m[r]||0)+1, m), {});
+      const mult = Math.max(...Object.values(counts));
+      document.getElementById('outcome').innerHTML =
+        `Sum: <strong>${sum}</strong> × Repeat: <strong>${mult}</strong> × 100 = ` +
+        `<span style="font-size:1.5rem;color:#FFDD57;">${dmg}</span>`;
+      renderRolls(rolls);
+      document.getElementById('result').style.display = 'block';
+    });
+
+    // Summon Calculator Logic
+    document.getElementById('summon-btn').addEventListener('click', () => {
+      const lvl = parseInt(document.getElementById('summon-level').value, 10);
+      if (isNaN(lvl) || lvl < 1 || lvl > 99) {
+        alert('Enter a valid level between 1 and 99');
+        return;
+      }
+      let S = 0;
+      for (let i = 0; i < 4; i++) {
+        S += Math.floor(Math.random() * 10) + 1;
+      }
+      S += Math.floor(lvl / 21);
+      let id = Math.floor(S / 2) - 3;
+      id = Math.min(16, Math.max(1, id));
+      const names = [
+        "", "Choco/Mog", "Shiva", "Ifrit", "Ramuh", "Titan", "Odin",
+        "Leviathan", "Bahamut", "Kujata", "Alexander", "Phoenix",
+        "Neo Bahamut", "Hades", "Typhon", "Bahamut Zero", "Knights of Round"
+      ];
+      document.getElementById('summon-outcome').innerHTML =
+        `<span style="font-size:1.5rem;color:#FFDD57;">${names[id]}</span>`;
+      document.getElementById('summon-result').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
