@@ -8,42 +8,41 @@
   <style>
     body {
       margin: 0;
-      padding: 0;                         /* removed padding so header sits flush */
+      padding: 0;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #243B55, #141E30);
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
       color: #fff;
       min-height: 100vh;
-      flex-direction: column;             /* stack header + sections vertically */
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
     }
 
     h1.main-title {
-      width: 100%;
-      margin: 0 0 1rem;                  /* no top margin, only bottom spacing */
-      padding: 1rem 0;                   /* give it some vertical breathing room */
+      margin: 0;
+      padding: 1rem 0;
       text-align: center;
       color: #FFDD57;
       text-shadow: 0 0 8px rgba(255,81,47,0.8);
       font-size: 2rem;
-      background: rgba(36,59,85,0.85);   /* semi‑opaque bar behind title */
+      background: rgba(36,59,85,0.85);
     }
 
     .sections {
-      padding: 2rem;                     /* moved the padding here */
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       gap: 2rem;
       width: 100%;
+      box-sizing: border-box;
     }
 
     .container {
       display: flex;
       gap: 2rem;
-      justify-content: flex-start;
-      align-items: flex-start;
       width: 100%;
+      flex-wrap: wrap;
+      align-items: flex-start;
     }
 
     .calculator, .info {
@@ -53,13 +52,17 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.7);
       backdrop-filter: blur(8px);
       text-align: center;
+      box-sizing: border-box;
     }
 
     .calculator {
       flex: 0 0 300px;
+      min-width: 0;
     }
+
     .info {
-      flex: 1 1 auto;
+      flex: 1 1 0%;
+      min-width: 0;
       overflow-x: auto;
     }
 
@@ -80,6 +83,7 @@
       font-size: 1rem;
       box-shadow: 0 0 8px rgba(255,81,47,0.8);
       transition: box-shadow 0.3s;
+      box-sizing: border-box;
     }
     input[type="number"]:focus {
       outline: none;
@@ -141,8 +145,15 @@
     <!-- Dice Calculator Section -->
     <div class="container">
       <div class="calculator">
-        <h2>Cait Sith' Dice</h2>
-        <input type="number" id="level" placeholder="Enter Cait Sith Level (1–99)" min="1" max="99">
+        <h2>Cait Sith Dice</h2>
+        <input
+          type="number"
+          id="level"
+          placeholder="Enter Cait Sith Level (1–99)"
+          min="1"
+          max="99"
+          oninput="this.value = Math.min(this.value, 99)"
+        >
         <button id="calculate">Calculate Damage</button>
         <div class="result" id="result" style="display:none;">
           <div id="outcome"></div>
@@ -172,7 +183,14 @@
     <div class="container">
       <div class="calculator">
         <h2>Cait Sith Summon</h2>
-        <input type="number" id="summon-level" placeholder="Enter Cait Sith Level (1–99)" min="1" max="99">
+        <input
+          type="number"
+          id="summon-level"
+          placeholder="Enter Cait Sith Level (1–99)"
+          min="1"
+          max="99"
+          oninput="this.value = Math.min(this.value, 99)"
+        >
         <button id="summon-btn">Summon</button>
         <div class="result" id="summon-result" style="display:none;">
           <div id="summon-outcome"></div>
@@ -212,12 +230,14 @@
       if (level <= 59) return 5;
       return 6;
     }
+
     function calculateDamage(rolls) {
       const sum = rolls.reduce((a, b) => a + b, 0);
       const counts = rolls.reduce((m, r) => (m[r] = (m[r]||0)+1, m), {});
       const mult = Math.max(...Object.values(counts));
       return Math.min(sum * mult * 100, 9999);
     }
+
     function renderRolls(rolls) {
       const div = document.getElementById('dice-rolls');
       div.innerHTML = '';
@@ -227,6 +247,7 @@
         div.appendChild(span);
       });
     }
+
     document.getElementById('calculate').addEventListener('click', () => {
       const lvl = parseInt(document.getElementById('level').value, 10);
       if (isNaN(lvl) || lvl < 1 || lvl > 99) {
